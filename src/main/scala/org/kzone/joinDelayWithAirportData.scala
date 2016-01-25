@@ -13,7 +13,6 @@ object joinDelayWithAirportData {
 
     val sparkContext = new SparkContext(conf)
 
-    println(sparkContext.version)
   }
 
   def parseDelay(line: String) = {
@@ -48,35 +47,38 @@ object joinDelayWithAirportData {
     val SecurityDelay = pieces(27).toInt
     val LateAircraftDelay = pieces(28).toInt
 
-    (Year,
-      Month,
-      DayofMonth,
-      DayOfWeek,
-      DepTime,
-      CRSDepTime,
-      ArrTime,
-      CRSArrTime,
-      UniqueCarrier,
-      FlightNum,
-      TailNum,
-      ActualElapsedTime,
-      CRSElapsedTime,
-      AirTime,
-      ArrDelay,
-      DepDelay,
-      Origin,
-      Dest,
-      Distance,
-      TaxiIn,
-      TaxiOut,
-      Cancelled,
-      CancellationCode,
-      Diverted,
-      CarrierDelay,
-      WeatherDelay,
-      NASDelay,
-      SecurityDelay,
-      LateAircraftDelay)
+    Delay(Year,Month,DayofMonth,DayOfWeek,DepTime,CRSDepTime,ArrTime,CRSArrTime,UniqueCarrier,FlightNum,TailNum,ActualElapsedTime,
+      CRSElapsedTime,AirTime,ArrDelay,DepDelay,Origin,Dest,Distance,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,
+      NASDelay,SecurityDelay,LateAircraftDelay)
   }
-
+ case class Delay(Year: Int,
+            Month: Int,
+            DayofMonth: Int,
+            DayOfWeek: Int,
+            DepTime: Int,
+            CRSDepTime: Int,
+            ArrTime: Int,
+            CRSArrTime: Int,
+            UniqueCarrier: String,
+            FlightNum: Int,
+            TailNum: String,
+            ActualElapsedTime: Int,
+            CRSElapsedTime: Int,
+            AirTime: Int,
+            ArrDelay: Int,
+            DepDelay: Int,
+            Origin: String,
+            Dest: String,
+            Distance: Int,
+            TaxiIn: Int,
+            TaxiOut: Int,
+            Cancelled: Int,
+            CancellationCode: Int,
+            Diverted: Int,
+            CarrierDelay: Int,
+            WeatherDelay: Int,
+            NASDelay: Int,
+            SecurityDelay: Int,
+            LateAircraftDelay: Int)
+  
 }
