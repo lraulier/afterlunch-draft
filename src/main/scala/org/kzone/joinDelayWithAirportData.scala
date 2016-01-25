@@ -1,7 +1,7 @@
 package org.kzone
 
 import org.apache.spark.{SparkContext, SparkConf}
-import sqlContext.implicits._
+import org.apache.spark.sql._
 
 /**
   * Created by kubu-kzone on 1/24/16.
@@ -15,8 +15,6 @@ object joinDelayWithAirportData {
     val sparkContext = new SparkContext(conf)
 
     // sc is an existing SparkContext.
-    val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-
-    println(sparkContext.version)
+    val sqlContext = new org.apache.spark.sql.SQLContext(sparkContext)
   }
 }
