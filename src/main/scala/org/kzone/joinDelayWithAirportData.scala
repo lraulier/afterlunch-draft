@@ -13,6 +13,8 @@ object joinDelayWithAirportData {
 
     val sparkContext = new SparkContext(conf)
 
+    val delay = sparkContext.textFile("../data/sample.csv")
+    delay.foreach(println)
   }
 
   def parseDelay(line: String) = {
