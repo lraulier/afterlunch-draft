@@ -19,6 +19,8 @@ object joinDelayWithAirportData {
     //delay_without_header.foreach(println)
     airport.foreach(println)
     val sampleSplit = delay_without_header.map(line => line.split(","))
+    val airportSplit = airport.map(line => line.split(","))
+    airportSplit.foreach(println)
     //sampleSplit.foreach(println)
   }
   def isHeader(line: String): Boolean = {
