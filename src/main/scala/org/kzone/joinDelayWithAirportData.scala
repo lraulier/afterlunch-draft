@@ -17,11 +17,13 @@ object joinDelayWithAirportData {
     val airport = sparkContext.textFile("../data/airport_data.csv")
     val delay_without_header = delay.filter(!isHeader(_))
     //delay_without_header.foreach(println)
-    airport.foreach(println)
+    //airport.foreach(println)
     val sampleSplit = delay_without_header.map(line => line.split(","))
     val airportSplit = airport.map(line => line.split(","))
-    airportSplit.foreach(println)
+    //airportSplit.foreach(println)
     //sampleSplit.foreach(println)
+    val sampleKeyed = sampleSplit.keyBy(cells => cells(17))
+    val airportKeyed = airportSplit.keyBy(cells => cells(4))
   }
   def isHeader(line: String): Boolean = {
     line.contains("Year")
