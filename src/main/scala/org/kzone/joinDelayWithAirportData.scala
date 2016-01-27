@@ -14,8 +14,10 @@ object joinDelayWithAirportData {
     val sparkContext = new SparkContext(conf)
 
     val delay = sparkContext.textFile("../data/sample.csv")
+    val airport = sparkContext.textFile("../data/airport_data.csv")
     val delay_without_header = delay.filter(!isHeader(_))
-    delay_without_header.foreach(println)
+    //delay_without_header.foreach(println)
+    airport.foreach(println)
     val sampleSplit = delay_without_header.map(line => line.split(","))
     //sampleSplit.foreach(println)
   }
