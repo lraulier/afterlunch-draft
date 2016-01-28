@@ -80,5 +80,16 @@ object joinDelayWithAirportData {
             NASDelay: Int,
             SecurityDelay: Int,
             LateAircraftDelay: Int)
-  
+  case class Airport(
+            AirportId: String,
+            Name: String,
+            City: String,
+            Country: String,
+            IATA_FAA: String,
+            ICAO: String,
+            Latitude: String,
+            Longitude: String,
+            Altitude: String,
+            Timezone: String
+                    )
 }
