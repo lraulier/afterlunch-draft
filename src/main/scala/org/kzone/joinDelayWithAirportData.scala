@@ -51,6 +51,23 @@ object joinDelayWithAirportData {
       CRSElapsedTime,AirTime,ArrDelay,DepDelay,Origin,Dest,Distance,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,
       NASDelay,SecurityDelay,LateAircraftDelay)
   }
+
+  def parseAirport(line: String): Unit ={
+    val pieces = line.split(",")
+    val AirportId = pieces(0)
+    val Name = pieces(1),
+    val City =pieces(2),
+    val Country = pieces(3),
+    val IATA_FAA = pieces(4),
+    val ICAO = pieces(5),
+    val Latitude =  pieces(6),
+    val Longitude =  pieces(7),
+    val Altitude = pieces(8),
+    val Timezone = pieces(9)
+
+    Airport(AirportId,Name,City,Country,IATA_FAA,ICAO,Latitude,Longitude,Altitude,Timezone)
+  }
+  
  case class Delay(Year: Int,
             Month: Int,
             DayofMonth: Int,
@@ -92,4 +109,8 @@ object joinDelayWithAirportData {
             Altitude: String,
             Timezone: String
                     )
+  case class Result(
+                   code: String,
+                   libelle: String
+                   )
 }
