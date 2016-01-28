@@ -6,46 +6,41 @@ import org.apache.spark.{SparkContext, SparkConf}
   * Created by kubu-kzone on 1/24/16.
   */
 object joinDelayWithAirportData {
-
-  def main (args: Array[String]): Unit ={
-    val conf = new SparkConf().setAppName("afterlunch-draft")
-      .setMaster("local[2]")
-
-    val sparkContext = new SparkContext(conf)
-
+  def isHeader(line: String): Boolean = {
+    line.contains("Year")
   }
 
   def parseDelay(line: String) = {
     val pieces = line.split(',')
-    val Year = pieces(0).toInt
-    val Month = pieces(1).toInt
-    val DayofMonth = pieces(2).toInt
-    val DayOfWeek = pieces(3).toInt
-    val DepTime = pieces(4).toInt
-    val CRSDepTime = pieces(5).toInt
-    val ArrTime = pieces(6).toInt
-    val CRSArrTime = pieces(7).toInt
+    val Year = pieces(0)
+    val Month = pieces(1)
+    val DayofMonth = pieces(2)
+    val DayOfWeek = pieces(3)
+    val DepTime = pieces(4)
+    val CRSDepTime = pieces(5)
+    val ArrTime = pieces(6)
+    val CRSArrTime = pieces(7)
     val UniqueCarrier = pieces(8)
-    val FlightNum = pieces(9).toInt
+    val FlightNum = pieces(9)
     val TailNum = pieces(10)
-    val ActualElapsedTime = pieces(11).toInt
-    val CRSElapsedTime = pieces(12).toInt
-    val AirTime = pieces(13).toInt
-    val ArrDelay = pieces(14).toInt
-    val DepDelay = pieces(15).toInt
+    val ActualElapsedTime = pieces(11)
+    val CRSElapsedTime = pieces(12)
+    val AirTime = pieces(13)
+    val ArrDelay = pieces(14)
+    val DepDelay = pieces(15)
     val Origin = pieces(16)
     val Dest = pieces(17)
-    val Distance = pieces(18).toInt
-    val TaxiIn = pieces(19).toInt
-    val TaxiOut = pieces(20).toInt
-    val Cancelled = pieces(21).toInt
-    val CancellationCode = pieces(22).toInt
-    val Diverted = pieces(23).toInt
-    val CarrierDelay = pieces(24).toInt
-    val WeatherDelay = pieces(25).toInt
-    val NASDelay = pieces(26).toInt
-    val SecurityDelay = pieces(27).toInt
-    val LateAircraftDelay = pieces(28).toInt
+    val Distance = pieces(18)
+    val TaxiIn = pieces(19)
+    val TaxiOut = pieces(20)
+    val Cancelled = pieces(21)
+    val CancellationCode = pieces(22)
+    val Diverted = pieces(23)
+    val CarrierDelay = pieces(24)
+    val WeatherDelay = pieces(25)
+    val NASDelay = pieces(26)
+    val SecurityDelay = pieces(27)
+    val LateAircraftDelay = pieces(28)
 
     Delay(Year,Month,DayofMonth,DayOfWeek,DepTime,CRSDepTime,ArrTime,CRSArrTime,UniqueCarrier,FlightNum,TailNum,ActualElapsedTime,
       CRSElapsedTime,AirTime,ArrDelay,DepDelay,Origin,Dest,Distance,TaxiIn,TaxiOut,Cancelled,CancellationCode,Diverted,CarrierDelay,WeatherDelay,
@@ -68,49 +63,72 @@ object joinDelayWithAirportData {
     Airport(AirportId,Name,City,Country,IATA_FAA,ICAO,Latitude,Longitude,Altitude,Timezone)
   }
 
- case class Delay(Year: Int,
-            Month: Int,
-            DayofMonth: Int,
-            DayOfWeek: Int,
-            DepTime: Int,
-            CRSDepTime: Int,
-            ArrTime: Int,
-            CRSArrTime: Int,
-            UniqueCarrier: String,
-            FlightNum: Int,
-            TailNum: String,
-            ActualElapsedTime: Int,
-            CRSElapsedTime: Int,
-            AirTime: Int,
-            ArrDelay: Int,
-            DepDelay: Int,
-            Origin: String,
-            Dest: String,
-            Distance: Int,
-            TaxiIn: Int,
-            TaxiOut: Int,
-            Cancelled: Int,
-            CancellationCode: Int,
-            Diverted: Int,
-            CarrierDelay: Int,
-            WeatherDelay: Int,
-            NASDelay: Int,
-            SecurityDelay: Int,
-            LateAircraftDelay: Int)
+  case class Delay(Year: String,
+                   Month: String,
+                   DayofMonth: String,
+                   DayOfWeek: String,
+                   DepTime: String,
+                   CRSDepTime: String,
+                   ArrTime: String,
+                   CRSArrTime: String,
+                   UniqueCarrier: String,
+                   FlightNum: String,
+                   TailNum: String,
+                   ActualElapsedTime: String,
+                   CRSElapsedTime: String,
+                   AirTime: String,
+                   ArrDelay: String,
+                   DepDelay: String,
+                   Origin: String,
+                   Dest: String,
+                   Distance: String,
+                   TaxiIn: String,
+                   TaxiOut: String,
+                   Cancelled: String,
+                   CancellationCode: String,
+                   Diverted: String,
+                   CarrierDelay: String,
+                   WeatherDelay: String,
+                   NASDelay: String,
+                   SecurityDelay: String,
+                   LateAircraftDelay: String)
   case class Airport(
-            AirportId: String,
-            Name: String,
-            City: String,
-            Country: String,
-            IATA_FAA: String,
-            ICAO: String,
-            Latitude: String,
-            Longitude: String,
-            Altitude: String,
-            Timezone: String
+                      AirportId: String,
+                      Name: String,
+                      City: String,
+                      Country: String,
+                      IATA_FAA: String,
+                      ICAO: String,
+                      Latitude: String,
+                      Longitude: String,
+                      Altitude: String,
+                      Timezone: String
                     )
   case class Result(
-                   code: String,
-                   libelle: String
+                     code: String,
+                     libelle: String,
+                     country: String
                    )
+
+  def main (args: Array[String]): Unit ={
+    val conf = new SparkConf().setAppName("afterlunch-draft")
+      .setMaster("local[2]")
+
+    val sparkContext = new SparkContext(conf)
+    val delay = sparkContext.textFile("../data/sample.csv")
+    val airport = sparkContext.textFile("../data/airport_data.csv")
+    val delay_without_header = delay.filter(!isHeader(_))
+    //delay_without_header.foreach(println)
+    val  airportData = airport.map(line => parseAirport(line))
+    //airportData.foreach(println)
+
+    val delayData = delay.map(line => parseDelay(line))
+    val airportKey = airportData.keyBy(f => f.IATA_FAA)
+    val delayKey = delayData.keyBy(f => "\""+f.Origin+"\"")
+
+    val result = airportKey.join(delayKey)
+
+    val output = result.map(f => (new Result(f._2._1.IATA_FAA,f._2._1.Name,f._2._1.Country)))
+    output.foreach(println)
+  }
 }
