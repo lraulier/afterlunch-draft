@@ -122,7 +122,7 @@ object joinDelayWithAirportData {
     val  airportData = airport.map(line => parseAirport(line))
     //airportData.foreach(println)
 
-    val delayData = delay.map(line => parseDelay(line))
+    val delayData = delay_without_header.map(line => parseDelay(line))
     val airportKey = airportData.keyBy(f => f.IATA_FAA)
     val delayKey = delayData.keyBy(f => "\""+f.Origin+"\"")
 
