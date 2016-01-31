@@ -16,14 +16,23 @@ object joinDelayWithAirportData {
 
     // sc is an existing SparkContext.
     val sqlContext = new org.apache.spark.sql.SQLContext(sparkContext)
-    val df: DataFrame = sqlContext.read
+    val delay: DataFrame = sqlContext.read
       .format("com.databricks.spark.csv")
       .option("header", "true") // Use first line of all files as header
       .option("inferSchema", "true") // Automatically infer data types
       .load("../data/sample.csv")
-    df.show() // show content
-    df.printSchema()
-    df.registerTempTable("delay")
-    sqlContext.sql("select Year from delay").foreach(println)
+    //delay.show() // show content
+    //delay.printSchema()
+    delay.registerTempTable("delay")
+    //sqlContext.sql("select Year from delay").foreach(println)
+
+    val airport: DataFrame = sqlContext.read
+      .format("com.databricks.spark.csv")
+      .option("header", "false")
+      .option("inferSchema", "true")
+      .load("../data/airport_data.csv")
+    //airport.printSchema()
+    //airport.show()
+    airport.registerTempTable("airport")
   }
 }
