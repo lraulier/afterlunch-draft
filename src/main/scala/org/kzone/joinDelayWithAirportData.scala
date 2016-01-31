@@ -120,16 +120,20 @@ object joinDelayWithAirportData {
     val airport = sparkContext.textFile("../data/airport_data.csv")
     val delay_without_header = delay.filter(!isHeader(_))
     //delay_without_header.foreach(println)
-    val  airportData = airport.map(line => parseAirport(line))
+    val  airportData: RDD[Airport] = airport.map(line => parseAirport(line))
     //airportData.foreach(println)
 
-    val delayData = delay_without_header.map(line => parseDelay(line))
-    val airportKey = airportData.keyBy(f => f.IATA_FAA)
-    val delayKey = delayData.keyBy(f => "\""+f.Origin+"\"")
+    val delayData: RDD[Delay] = delay_without_header.map(line => parseDelay(line))
+    val airportKey: RDD[(String, Airport)] = airportData.keyBy(_.IATA_FAA)
+    val delayKey: RDD[(String, Delay)] = delayData.keyBy(f => "\""+f.Origin+"\"")
 
     val result: RDD[(String, (Airport, Delay))] = airportKey.join(delayKey)
 
-    val output: RDD[Result] = result.map(f => new Result(f._2._1.IATA_FAA,f._2._1.Name,f._2._1.Country))
+    val output: RDD[Result] = result.map {
+       //cannot use implicit parameter
+       // incorrect usage count of parameters !???
+      (f: (String, (Airport, Delay))) => new Result(f._2._1.IATA_FAA, f._2._1.Name, f._2._1.Country)
+    }
     output.foreach(println)
   }
 }
