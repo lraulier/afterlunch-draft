@@ -1,5 +1,6 @@
 package org.kzone
 
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkContext, SparkConf}
 
 /**
@@ -126,9 +127,9 @@ object joinDelayWithAirportData {
     val airportKey = airportData.keyBy(f => f.IATA_FAA)
     val delayKey = delayData.keyBy(f => "\""+f.Origin+"\"")
 
-    val result = airportKey.join(delayKey)
+    val result: RDD[(String, (Airport, Delay))] = airportKey.join(delayKey)
 
-    val output = result.map(f => (new Result(f._2._1.IATA_FAA,f._2._1.Name,f._2._1.Country)))
+    val output: RDD[Result] = result.map(f => new Result(f._2._1.IATA_FAA,f._2._1.Name,f._2._1.Country))
     output.foreach(println)
   }
 }
